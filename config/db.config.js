@@ -24,7 +24,7 @@ knex.raw('SELECT VERSION()').then(() => {
   }
 });
 
-const createNewAccount = ({ acID, acNm, bal }) => {
+const createNewAccount = ({ acID, acNm, bal }, onCreate = undefined) => {
   knex.query(
     `Insert into account values ($1 , $2 , $3)`,
     [acID, acNm, bal],
@@ -33,28 +33,103 @@ const createNewAccount = ({ acID, acNm, bal }) => {
         console.log(err);
       } else {
         console.log('Account Created Successfully');
+        if (onCreate) {
+          onCreate(`New Customer Created successfully`);
+        }
       }
     },
   );
 };
 
-const withDraw = ({ acID, amount }) => {
-  // knex.query(
-  //   `select balance from account where ac_id = $1`,
-  //   [acID],
-  //   (err, res) => {
-  //     const { bal } = res.row[0];
-  //     if (err) {
-  //       console.log(err);
-  //     } else {
-  //       console.log('Account Created Successfully');
-  //     }
-  //   },
-  // );
+const withDraw = ({ acID, amount }, onWithdraw = undefined) => {
+  knex.query(
+    `select balance from account where ac_id = $1`,
+    [acID],
+    (err, res) => {
+      if (err) {
+        console.log(err);
+      } else {
+        const balance = parseFloat(res.row[0].balance);
+
+        const newBalance = balance - amount;
+
+        knex.query(
+          `update account set balance = $1 where ac_id = $2`,
+          [newBalance, acID],
+          (err, res) => {
+            if (err) {
+              console.log(`\n Problem in Withdrawing`);
+            } else {
+              console.log(`\n Amount ${amount} Withdraw Successfully`);
+              if (onWithdraw) {
+                onWithdraw(`Amount ${amount} Withdraw Successfully`);
+              }
+            }
+          },
+        );
+      }
+    },
+  );
 };
 
-const deposit = ({ acID, acNm, bal }) => {};
+const deposit = ({ acID, amount }, onDeposit = undefined) => {
+  knex.query(
+    `select balance from account where ac_id = $1`,
+    [acID],
+    (err, res) => {
+      if (err) {
+        console.log(`\n Problem In Deposit`);
+      } else {
+        const balance = parseFloat(res.row[0].balance);
+        const newBalance = balance + amount;
 
-const transfer = ({ acID, acNm, bal }) => {};
+        knex.query(
+          `update account set balance = $1 where ac_id = $2`,
+          [newBalance, acID],
+          (err, res) => {
+            if (err) {
+              console.log(`\n Problem in Depositing `);
+            } else {
+              console.log(`\n Amount ${amount} deposited Successfully`);
+              if (onDeposit) {
+                onDeposit(`Amount ${amount} Deposit Successfully`);
+              }
+            }
+          },
+        );
+      }
+    },
+  );
+};
 
-module.exports = { createNewAccount, withDraw, deposit, transfer };
+const transfer = ({ srcID, destID, amount }, onTransfer = undefined) => {
+  withDraw({ acID: srcID, amount }, (msgWd) => {
+    deposit({ acID: destID, amount }, (msgDp) => {
+      if (onTransfer) {
+        onTransfer(`Amount ${amount} Transferred Successfully`);
+      }
+    });
+  });
+};
+
+const balance = ({ acID, onBalance = undefined }) => {
+  console.log(acID);
+  knex.query(
+    `Select balancce from account where ac_id = $1`,
+    [acID],
+    (err, res) => {
+      if (err) {
+        console.log(`\n problem in getting balance from account`);
+        console.log(err);
+      } else {
+        const balance = parseFloat(res.rows[0].balance);
+        console.log(`/n Your Balnce is : ${balance}`);
+        if (balance) {
+          onBalance(balance);
+        }
+      }
+    },
+  );
+};
+
+module.exports = { createNewAccount, withDraw, deposit, transfer, balance };

@@ -1,15 +1,15 @@
 const express = require('express');
 
-const {
-  createNewAccount,
-  withDraw,
-  deposit,
-  transfer,
-} = require('./config/db.config');
-// require('dotenv').config();
+const bank = require('./routes/bank.route');
+
 const app = express();
 
-const PORT = process.env.DB_PORT || 4001;
+const PORT = 4001;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.use('/', checkBalance);
 
 app.listen(PORT, () => {
   console.log(`Running on Port ${PORT}`);
