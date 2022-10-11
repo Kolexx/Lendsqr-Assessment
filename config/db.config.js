@@ -25,7 +25,7 @@ knex.raw('SELECT VERSION()').then(() => {
 });
 
 const createNewAccount = ({ acID, acNm, bal }, onCreate = undefined) => {
-  knex.query(
+  knex.raw(
     `Insert into account values ($1 , $2 , $3)`,
     [acID, acNm, bal],
     (err, res) => {
@@ -42,7 +42,7 @@ const createNewAccount = ({ acID, acNm, bal }, onCreate = undefined) => {
 };
 
 const withDraw = ({ acID, amount }, onWithdraw = undefined) => {
-  knex.query(
+  knex.raw(
     `select balance from account where ac_id = $1`,
     [acID],
     (err, res) => {
@@ -53,7 +53,7 @@ const withDraw = ({ acID, amount }, onWithdraw = undefined) => {
 
         const newBalance = balance - amount;
 
-        knex.query(
+        knex.raw(
           `update account set balance = $1 where ac_id = $2`,
           [newBalance, acID],
           (err, res) => {
@@ -73,7 +73,7 @@ const withDraw = ({ acID, amount }, onWithdraw = undefined) => {
 };
 
 const deposit = ({ acID, amount }, onDeposit = undefined) => {
-  knex.query(
+  knex.raw(
     `select balance from account where ac_id = $1`,
     [acID],
     (err, res) => {
@@ -83,7 +83,7 @@ const deposit = ({ acID, amount }, onDeposit = undefined) => {
         const balance = parseFloat(res.row[0].balance);
         const newBalance = balance + amount;
 
-        knex.query(
+        knex.raw(
           `update account set balance = $1 where ac_id = $2`,
           [newBalance, acID],
           (err, res) => {
@@ -114,7 +114,7 @@ const transfer = ({ srcID, destID, amount }, onTransfer = undefined) => {
 
 const balance = ({ acID, onBalance = undefined }) => {
   console.log(acID);
-  knex.query(
+  knex.raw(
     `Select balancce from account where ac_id = $1`,
     [acID],
     (err, res) => {
