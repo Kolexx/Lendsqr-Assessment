@@ -1,5 +1,5 @@
 const express = require('express');
-require('dotenv').config({ path: '../.env' });
+
 const bank = require('./routes/bank.route');
 
 const app = express();
@@ -14,4 +14,3 @@ app.use('/bank', bank);
 app.listen(PORT, () => {
   console.log(`Running on Port ${PORT}`);
 });
-1;

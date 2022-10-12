@@ -5,7 +5,7 @@ const {
   deposit,
   transfer,
   balance,
-} = require('../config/db.config');
+} = require('../middleware/bank');
 
 router.get('/balance/:acid', (req, res) => {
   console.log(req.params);
