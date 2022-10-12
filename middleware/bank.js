@@ -1,4 +1,4 @@
-const knex = require('knex');
+const knex = require('../config/db.config');
 
 const createNewAccount = ({ acID, acNm, bal }, onCreate = undefined) => {
   knex.raw(
