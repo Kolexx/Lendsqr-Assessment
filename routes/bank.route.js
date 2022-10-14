@@ -5,6 +5,7 @@ router.post('/createAccount', (req, res) => {
   service.createNewAccount(req.body, (msg) => {
     res.json({ msg });
   });
+  console.log(req.body);
 });
 
 router.get('/balance/:acID', (req, res) => {

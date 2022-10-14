@@ -1,15 +1,13 @@
 const express = require('express');
-const cors = require('cors');
-const knex = require('./config/db.config');
-
+const bodyParser = require('body-parser');
 const bank = require('./routes/bank.route');
-
 const app = express();
-app.use(cors());
-// require('dotenv').config();
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 const PORT = 4001;
 
-app.use('/bank', express.json(), bank);
+app.use('/bank', bank);
 
 app.listen(PORT, () => {
   console.log(`Running on Port ${PORT}`);

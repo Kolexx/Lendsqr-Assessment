@@ -2,7 +2,7 @@ const knex = require('../config/db.config');
 
 const createNewAccount = ({ acID, acNm, balance }, onCreate = undefined) => {
   knex.raw(
-    `Insert into account values ($1 , $2 , $3)`,
+    `INSERT INTO account VALUES($1 , $2 , $3)`,
     [acID, acNm, balance],
     (err, res) => {
       if (err) {
