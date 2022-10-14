@@ -7,6 +7,12 @@ const {
   balance,
 } = require('../controller/bank');
 
+router.post('/createAccount', (req, res) => {
+  createNewAccount(req.body, () => {
+    res.json({ sts: 'Succesful', msg });
+  });
+});
+
 router.get('/balance/:acid', (req, res) => {
   console.log(req.params);
   const acid = req.params.acid;
@@ -33,9 +39,4 @@ router.put('/transfer', (req, res) => {
   });
 });
 
-router.post('/createAccount', (req, res) => {
-  createNewAccount(req.body, () => {
-    res.json({ sts: 'Succesful', msg });
-  });
-});
 module.exports = router;
