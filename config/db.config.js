@@ -23,6 +23,23 @@ knex
   })
   .catch((err) => {
     console.log('Not connected to server');
+  })
+  .finally(() => {
+    knex.destroy();
   });
+// knex.schema
+//   .createTable('account', (table) => {
+//     table.increments('acID');
+//     table.string('acNm');
+//     table.integer('balance ');
+//   })
+//   .then(() => console.log('table created'))
+//   .catch((err) => {
+//     console.log(err);
+//     throw err;
+//   })
+// .finally(() => {
+//   knex.destroy();
+// });
 
 module.exports = knex;

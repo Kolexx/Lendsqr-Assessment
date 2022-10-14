@@ -1,9 +1,9 @@
 const knex = require('../config/db.config');
 
-const createNewAccount = ({ acID, acNm, bal }, onCreate = undefined) => {
+const createNewAccount = ({ acID, acNm, balance }, onCreate = undefined) => {
   knex.raw(
     `Insert into account values ($1 , $2 , $3)`,
-    [acID, acNm, bal],
+    [acID, acNm, balance],
     (err, res) => {
       if (err) {
         console.log(err);
@@ -19,7 +19,7 @@ const createNewAccount = ({ acID, acNm, bal }, onCreate = undefined) => {
 
 const withDraw = ({ acID, amount }, onWithdraw = undefined) => {
   knex.raw(
-    `select balance from account where ac_id = $1`,
+    `select balance from account where acID = $1`,
     [acID],
     (err, res) => {
       if (err) {
@@ -30,7 +30,7 @@ const withDraw = ({ acID, amount }, onWithdraw = undefined) => {
         const newBalance = balance - amount;
 
         knex.raw(
-          `update account set balance = $1 where ac_id = $2`,
+          `update account set balance = $1 where  acID = $2`,
           [newBalance, acID],
           (err, res) => {
             if (err) {
@@ -89,18 +89,15 @@ const transfer = ({ srcID, destID, amount }, onTransfer = undefined) => {
 };
 
 const balance = ({ acID, onBalance = undefined }) => {
-  console.log(acID);
   knex.raw(
-    `Select balancce from account where ac_id = $1`,
+    `Select balance from account where ac_id = $1`,
     [acID],
     (err, res) => {
       if (err) {
-        console.log(`\n problem in getting balance from account`);
         console.log(err);
       } else {
         const balance = parseFloat(res.rows[0].balance);
-        console.log(`/n Your Balnce is : ${balance}`);
-        if (balance) {
+        if (onBalance) {
           onBalance(balance);
         }
       }
