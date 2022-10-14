@@ -1,4 +1,5 @@
 const express = require('express');
+const knex = require('./config/db.config');
 
 const bank = require('./routes/bank.route');
 
