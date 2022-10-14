@@ -16,12 +16,13 @@ const knex = require('knex')({
 
 // checking if connected
 
-knex.raw('SELECT VERSION()').then(() => {
-  try {
+knex
+  .raw('SELECT VERSION()')
+  .then(() => {
     console.log('Connected to server');
-  } catch (error) {
-    console.log(error);
-  }
-});
+  })
+  .catch((err) => {
+    console.log('Not connected to server');
+  });
 
 module.exports = knex;
